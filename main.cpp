@@ -8,6 +8,7 @@
 #include "src/suicideburn.hpp"
 
 typedef krpc::services::SpaceCenter::SASMode SASMode;
+typedef krpc::services::SpaceCenter::SpeedMode SpeedMode;
 
 #define FINAL_SPEED 6
 
@@ -49,7 +50,8 @@ int main(int argc, const char **argv) {
     usleep(10*1000*1000);
 
     std::cout << "Removing horizontal speed\n";
-    while (horizontal_speed_stream() > 15) {
+    vessel.control().set_speed_mode(SpeedMode::orbit);
+    while (horizontal_speed_stream() > 10) {
         twr = thrust / (body_gravity * mass_stream());
         height_sb = SBurn::get_height(twr, (float)vertical_speed_stream(), body_gravity);
         if (height_stream() > height_sb + 2000) continue;
@@ -58,6 +60,7 @@ int main(int argc, const char **argv) {
     vessel.control().set_throttle(0);
 
     std::cout << "Starting first stage of suicide burn\n";
+    vessel.control().set_speed_mode(SpeedMode::surface);
     while (speed_stream() > FINAL_SPEED) {
         twr = thrust / (body_gravity * mass_stream());
         height_sb = SBurn::get_height(twr, (float)speed_stream(), body_gravity) + 20;
