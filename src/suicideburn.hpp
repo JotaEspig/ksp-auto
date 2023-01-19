@@ -3,10 +3,8 @@
 
 #include <krpc/services/space_center.hpp>
 
+#include "types.hpp"
 
-typedef krpc::services::SpaceCenter::SASMode SASMode;
-typedef krpc::services::SpaceCenter::SpeedMode SpeedMode;
-typedef krpc::services::SpaceCenter::Vessel Vessel;
 
 #define FINAL_SPEED 6
 
