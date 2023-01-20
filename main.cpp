@@ -6,6 +6,8 @@
 #include <krpc/services/space_center.hpp>
 
 #include "src/suicideburn.hpp"
+#include "src/launchorbit.hpp"
+
 
 int main(int argc, const char **argv) {
     std::string address = "127.0.0.1";
@@ -18,5 +20,6 @@ int main(int argc, const char **argv) {
 
     auto vessel = sc.active_vessel();
 
-    suicide_burn(vessel);
+    //suicide_burn(vessel);
+    launch_into_orbit(sc, vessel, 80000, 1000, 45000);
 }
