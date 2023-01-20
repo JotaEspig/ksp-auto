@@ -1,4 +1,3 @@
-#include <math.h>
 #include <unistd.h>
 
 #include <krpc/services/space_center.hpp>
@@ -17,8 +16,10 @@ void suicide_burn(Vessel vessel) {
     auto throttle_stream = vessel.control().throttle_stream();
     auto speed_stream = vessel.flight(body_refframe).speed_stream();
     auto v_speed_stream = vessel.flight(body_refframe).vertical_speed_stream();
-    auto h_speed_stream = vessel.flight(body_refframe).horizontal_speed_stream();
-    auto height_stream = vessel.flight(body_refframe).bedrock_altitude_stream();
+    auto h_speed_stream = vessel.flight(body_refframe).
+        horizontal_speed_stream();
+    auto height_stream = vessel.flight(body_refframe).
+        bedrock_altitude_stream();
 
     if (thrust == 0) {
         std::cout << "No available thrust!\n";
