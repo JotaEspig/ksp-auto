@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <tuple>
 
 #include <krpc/services/space_center.hpp>
 
@@ -14,6 +15,7 @@ void suicide_burn(Vessel vessel) {
 
     auto mass_stream = vessel.mass_stream();
     auto throttle_stream = vessel.control().throttle_stream();
+    auto velocity_stream = vessel.flight(body_refframe).velocity_stream();
     auto speed_stream = vessel.flight(body_refframe).speed_stream();
     auto v_speed_stream = vessel.flight(body_refframe).vertical_speed_stream();
     auto h_speed_stream = vessel.flight(body_refframe).
@@ -26,16 +28,18 @@ void suicide_burn(Vessel vessel) {
         exit(-1);
     }
 
-    vessel.control().set_sas(true);
-    usleep(2*1000*1000);
-    vessel.control().set_sas_mode(SASMode::retrograde);
-    usleep(5*1000*1000);
+    vessel.auto_pilot().engage();
+    vessel.auto_pilot().set_reference_frame(body_refframe);
+
+    set_retrograde_direction(vessel, velocity_stream());
+    vessel.auto_pilot().wait();
 
     std::cout << "Removing horizontal speed\n";
     vessel.control().set_speed_mode(SpeedMode::surface);
     while (h_speed_stream() > 10) {
         twr = thrust / (body_gravity * mass_stream());
         height_sb = get_height(twr, v_speed_stream(), body_gravity);
+        set_retrograde_direction(vessel, velocity_stream());
         if (height_stream() > height_sb + 2000) continue;
         if (throttle_stream() < 1) vessel.control().set_throttle(1);
     }
@@ -47,6 +51,7 @@ void suicide_burn(Vessel vessel) {
     while (speed_stream() > FINAL_SPEED) {
         twr = thrust / (body_gravity * mass_stream());
         height_sb = get_height(twr, speed_stream(), body_gravity) + 20; // 20 is a safe margin
+        set_retrograde_direction(vessel, velocity_stream());
         if (height_sb < height_stream()) {
             if (throttle_stream() > 0) vessel.control().set_throttle(0);
             continue;
@@ -69,4 +74,11 @@ static double get_height(float twr, float current_speed, float gravity) {
     float t = current_speed / a; // time
     float height = (current_speed/2)*t; // average speed plus time
     return height;
+}
+
+static void set_retrograde_direction(Vessel vessel,
+            std::tuple<double, double, double> velocity) {
+    vessel.auto_pilot().set_target_direction(std::make_tuple(
+        -std::get<0>(velocity), -std::get<1>(velocity), -std::get<2>(velocity)
+    ));
 }

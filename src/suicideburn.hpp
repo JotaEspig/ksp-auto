@@ -15,14 +15,8 @@
  */
 void suicide_burn(Vessel vessel);
 
-/**
- * @brief Get the height to start the suicide burn
- *
- * @param twr TWR
- * @param current_speed Current speed of the vessel
- * @param gravity Gravity of the body
- * @return double
- */
 static double get_height(float twr, float current_speed, float gravity);
+
+static void set_retrograde_direction(Vessel vessel, std::tuple<double, double, double>);
 
 #endif // SUICIDEBURN_HPP
