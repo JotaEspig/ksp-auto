@@ -5,8 +5,6 @@
 #include "launchorbit.hpp"
 
 
-#define visviva(gm, r, a) std::sqrt(gm * ((2.0 / r) - (1.0 / a)));
-
 void launch_into_orbit(SpaceCenter sc, Vessel vessel, int target_alt, 
                         int turn_start_alt, int turn_end_alt) {
     auto ut = sc.ut_stream();
@@ -41,13 +39,12 @@ void launch_into_orbit(SpaceCenter sc, Vessel vessel, int target_alt,
     while (altitude() < 70500);
 
     double gm = vessel.orbit().body().gravitational_parameter();
-    double r = apoapsis();
+    double r = vessel.orbit().apoapsis();
     double a1 = vessel.orbit().semi_major_axis();
     double a2 = r;
-    double v1 = visviva(gm, r, a1);
-    double v2 = visviva(gm, r, a2);
+    double v1 = std::sqrt(gm * ((2.0 / r) - (1.0 / a1)));
+    double v2 = std::sqrt(gm * ((2.0 / r) - (1.0 / a2)));
     double delta_v = v2 - v1;
-
     auto node = vessel.control().add_node(
         ut() + vessel.orbit().time_to_apoapsis(), delta_v);
     
@@ -67,8 +64,7 @@ void launch_into_orbit(SpaceCenter sc, Vessel vessel, int target_alt,
     usleep((burn_time - 0.1) * 1000 * 1000);
     vessel.control().set_throttle(0.05);
     auto remaining_burn = node.remaining_burn_vector_stream(node.reference_frame());
-    while (std::get<0>(remaining_burn()) > 0);
-
+    while (std::get<0>(remaining_burn()) > 0.5 || std::get<1>(remaining_burn()) > 0.5);
     vessel.control().set_throttle(0);
     node.remove();
 
