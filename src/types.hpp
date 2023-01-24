@@ -5,7 +5,6 @@
 
 
 typedef krpc::services::SpaceCenter SpaceCenter;
-typedef krpc::services::SpaceCenter::SASMode SASMode;
 typedef krpc::services::SpaceCenter::SpeedMode SpeedMode;
 typedef krpc::services::SpaceCenter::Vessel Vessel;
 
