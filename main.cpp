@@ -1,16 +1,14 @@
 #include <iostream>
 #include <string>
-#include <unistd.h>
 
 #include <krpc.hpp>
 #include <krpc/services/space_center.hpp>
 
-#include "src/suicideburn.hpp"
-#include "src/launchorbit.hpp"
-#include "src/maneuver.hpp"
+#include "src/menu.hpp"
 
 
 int main(int argc, const char **argv) {
+    std::string choice;
     std::string address = "127.0.0.1";
     if (argc > 1) {
         address = argv[1];
@@ -21,7 +19,12 @@ int main(int argc, const char **argv) {
 
     auto vessel = sc.active_vessel();
 
-    //suicide_burn(vessel);
-    //launch_into_orbit(sc, vessel, 80000, 250, 47000);
-    do_maneuver(vessel, vessel.control().nodes()[0]);
+    std::cout << "Which tool do you want to use?\n"
+                 "- \"suicideburn\"\n"
+                 "- \"launch\" (launch into orbit)\n"
+                 "- \"maneuver\" (do a maneuver)\n"
+                 "|> ";
+    std::cin >> choice;
+    auto f = menu::commands.at(choice);
+    f(vessel);
 }
