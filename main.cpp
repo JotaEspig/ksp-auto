@@ -7,6 +7,7 @@
 
 #include "src/suicideburn.hpp"
 #include "src/launchorbit.hpp"
+#include "src/maneuver.hpp"
 
 
 int main(int argc, const char **argv) {
@@ -21,5 +22,6 @@ int main(int argc, const char **argv) {
     auto vessel = sc.active_vessel();
 
     //suicide_burn(vessel);
-    launch_into_orbit(sc, vessel, 80000, 1000, 45000);
+    //launch_into_orbit(sc, vessel, 80000, 250, 47000);
+    do_maneuver(vessel, vessel.control().nodes()[0]);
 }
