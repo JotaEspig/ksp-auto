@@ -70,7 +70,7 @@ void suicide_burn(Vessel vessel) {
 }
 
 static double get_height(float twr, float current_speed, float gravity) {
-    float a = twr * gravity; // acceleration
+    float a = twr * gravity - gravity; // acceleration
     float t = current_speed / a; // time
     float height = (current_speed/2)*t; // average speed plus time
     return height;
