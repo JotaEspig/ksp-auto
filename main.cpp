@@ -19,7 +19,7 @@ int main(int argc, const char **argv) {
 
     std::cout << "Which tool do you want to use?\n"
                  "- \"suicideburn\"\n"
-                 "- \"launch\" (launch into orbit)\n"
+                 "- \"launch\"   (launch into orbit)\n"
                  "- \"maneuver\" (do a maneuver)\n"
                  "|> ";
     std::cin >> choice;
