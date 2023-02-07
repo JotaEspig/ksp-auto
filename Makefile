@@ -8,8 +8,11 @@ TARGET_NAME=ksp-auto
 
 IP=127.0.0.1
 
-all:
-	$(CC) main.cpp $(SRC) $(CC_FLAGS) -o $(TARGET_NAME) 
+all: dir
+	$(CC) main.cpp $(SRC) $(CC_FLAGS) -o ./bin/$(TARGET_NAME)
+
+dir:
+	if [ ! -d "./bin" ]; then mkdir bin; fi
 
 run: all
-	@ ./$(TARGET_NAME) $(IP)
+	@ ./bin/$(TARGET_NAME) $(IP)
