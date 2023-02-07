@@ -29,15 +29,9 @@ static void run_launch_into_orbit(SpaceCenter sc) {
 }
 
 static void run_do_maneuver(SpaceCenter sc) {
-    int choice;
-    Node node;
-
     Vessel vessel = sc.active_vessel();
-
-    std::cout << "Maneuver you want to do automatically (starting with 0): ";
-    std::cin >> choice;
     
-    node = vessel.control().nodes().at(choice);
+    Node node = vessel.control().nodes().at(0);
     do_maneuver(vessel, node);
 }
 
